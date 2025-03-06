@@ -54,9 +54,9 @@ app.post('/api/users/register', async (req, res) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     
-    // Insert user into database - using the correct field name tipo_usuairo
+    // Insert user into database
     await pool.query(
-      'INSERT INTO users (username, password, nombre, apellidos, tipo_usuairo, activo) VALUES (?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (username, password, nombre, apellidos, tipo_usuario, activo) VALUES (?, ?, ?, ?, ?, ?)',
       [username, hashedPassword, nombre, apellidos || null, 'user', 1]
     );
     
