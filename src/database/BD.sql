@@ -10,6 +10,5 @@ CREATE TABLE IF NOT EXISTS users (
     apellidos VARCHAR(128) NULL,
     tipo_usuairo VARCHAR(32) NOT NULL DEFAULT 'user',
     activo TINYINT NOT NULL DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE INDEX idx_username (username)
 );
