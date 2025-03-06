@@ -1,69 +1,52 @@
-# Welcome to your Lovable project
 
-## Project info
+# Aplicación de Registro de Usuarios
 
-**URL**: https://lovable.dev/projects/25da8346-db2f-4c67-a593-1940922c47d6
+Esta aplicación incluye un sistema de registro de usuarios con validación en el frontend y backend, y almacenamiento seguro de contraseñas.
 
-## How can I edit this code?
+## Requisitos Previos
 
-There are several ways of editing your application.
+- Node.js (v14 o superior)
+- XAMPP o MariaDB/MySQL instalado
+- NPM o Yarn
 
-**Use Lovable**
+## Configuración
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/25da8346-db2f-4c67-a593-1940922c47d6) and start prompting.
+1. Iniciar el servidor MySQL/MariaDB (a través de XAMPP o directamente)
+2. Crear la base de datos y tabla:
+   - Puedes ejecutar el script SQL en `src/database/BD.sql` en phpMyAdmin o mediante el cliente MySQL
+   - Esto creará una base de datos llamada `practica04` con la tabla necesaria
 
-Changes made via Lovable will be committed automatically to this repo.
+3. Instalar dependencias del backend:
+   ```
+   cd src/server
+   npm install express cors body-parser bcryptjs mysql2
+   ```
 
-**Use your preferred IDE**
+4. Iniciar el servidor backend:
+   ```
+   node src/server/index.js
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+5. En otra terminal, iniciar la aplicación frontend:
+   ```
+   npm run dev
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Uso
 
-Follow these steps:
+1. Accede a la aplicación en `http://localhost:5173`
+2. Completa el formulario de registro con:
+   - Nombre (obligatorio)
+   - Apellidos (opcional)
+   - Nombre de usuario (obligatorio)
+   - Contraseña (obligatorio)
+   - Confirmar contraseña (obligatorio)
+3. Al enviar el formulario, recibirás una notificación de éxito o error según corresponda
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Características
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/25da8346-db2f-4c67-a593-1940922c47d6) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Validación en tiempo real del nombre de usuario
+- Verificación de coincidencia de contraseñas
+- Almacenamiento seguro de contraseñas con BCrypt (factor de trabajo 12)
+- Verificación de unicidad de nombre de usuario
+- Manejo de errores con notificaciones visuales

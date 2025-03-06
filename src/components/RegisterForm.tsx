@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,13 +15,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { userService } from "@/services/userService";
+import { userService, RegisterParams } from "@/services/userService";
 
 const registerSchema = z.object({
-  nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  apellidos: z.string().min(2, "Los apellidos deben tener al menos 2 caracteres"),
-  username: z.string().min(3, "El username debe tener al menos 3 caracteres"),
-  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres").nonempty("El nombre es obligatorio"),
+  apellidos: z.string().optional(),
+  username: z.string().min(3, "El username debe tener al menos 3 caracteres").nonempty("El nombre de usuario es obligatorio"),
+  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres").nonempty("La contraseña es obligatoria"),
+  confirmPassword: z.string().nonempty("Confirmar la contraseña es obligatorio"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -37,6 +42,7 @@ export function RegisterForm() {
       apellidos: "",
       username: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -66,7 +72,7 @@ export function RegisterForm() {
     try {
       const userData: RegisterParams = {
         nombre: formData.nombre,
-        apellidos: formData.apellidos,
+        apellidos: formData.apellidos || "",
         username: formData.username,
         password: formData.password
       };
@@ -102,7 +108,7 @@ export function RegisterForm() {
             name="nombre"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombre</FormLabel>
+                <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="Ingresa tu nombre" {...field} />
                 </FormControl>
@@ -130,7 +136,7 @@ export function RegisterForm() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombre de usuario</FormLabel>
+                <FormLabel>Nombre de usuario <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Elige un nombre de usuario" 
@@ -154,9 +160,23 @@ export function RegisterForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contraseña</FormLabel>
+                <FormLabel>Contraseña <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="Crea una contraseña" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmar contraseña <span className="text-red-500">*</span></FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Confirma tu contraseña" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -172,6 +192,10 @@ export function RegisterForm() {
           </Button>
         </form>
       </Form>
+      
+      <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-red-500">*</span> Campos obligatorios
+      </div>
     </div>
   );
 }

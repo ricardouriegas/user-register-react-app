@@ -1,7 +1,7 @@
 
 import bcrypt from 'bcryptjs';
 
-type RegisterParams = {
+export type RegisterParams = {
   nombre: string;
   apellidos: string;
   username: string;
