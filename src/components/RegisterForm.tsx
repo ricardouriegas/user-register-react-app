@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { userService } from "@/services/userService";
 
-// Define the form schema with validation
 const registerSchema = z.object({
   nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   apellidos: z.string().min(2, "Los apellidos deben tener al menos 2 caracteres"),
@@ -63,17 +61,23 @@ export function RegisterForm() {
     }
   }
 
-  async function onSubmit(data: RegisterFormValues) {
+  async function onSubmit(formData: RegisterFormValues) {
     setIsSubmitting(true);
     try {
-      const result = await userService.register(data);
+      const userData: RegisterParams = {
+        nombre: formData.nombre,
+        apellidos: formData.apellidos,
+        username: formData.username,
+        password: formData.password
+      };
+      
+      const result = await userService.register(userData);
       
       toast({
         title: "Registro exitoso",
         description: "Tu cuenta ha sido creada correctamente.",
       });
       
-      // Reset form after successful registration
       form.reset();
       
     } catch (error: any) {
