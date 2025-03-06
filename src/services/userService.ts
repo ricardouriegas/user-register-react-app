@@ -1,4 +1,6 @@
 
+import bcrypt from 'bcryptjs';
+
 type RegisterParams = {
   nombre: string;
   apellidos: string;
@@ -6,24 +8,33 @@ type RegisterParams = {
   password: string;
 };
 
-// API base URL - you might want to move this to an environment variable in a real app
-const API_URL = "http://localhost:3000/api"; // Replace with your actual API URL
+const API_URL = "http://localhost:3000/api";
 
 class UserService {
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+  }
+
   async register(userData: RegisterParams): Promise<any> {
     try {
+      // Hash password before sending to API
+      const hashedPassword = await this.hashPassword(userData.password);
+
       const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({
+          ...userData,
+          password: hashedPassword
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        // Handle server errors
         throw new Error(data.message || "Error al registrar usuario");
       }
 
